@@ -1,0 +1,122 @@
+{% extends "base_template.html" %} {% block title %}{{title}}{% endblock %} {%
+block content %}
+<center>
+  <h1>Hitman detail</h1>
+  {% if message %}
+  <h3>{{message}}</h3>
+  {% endif %}
+  <div>
+    <table>
+      <tr>
+        <td><b>Id</b></td>
+        <td>{{hitman.id}}</td>
+      </tr>
+      <tr>
+        <td><b>Name</b></td>
+        <td>{{hitman.name}}</td>
+      </tr>
+      <tr>
+        <td><b>Email</b></td>
+        <td>{{hitman.email}}</td>
+      </tr>
+      <tr>
+        <td><b>Description</b></td>
+        <td>{{hitman.description}}</td>
+      </tr>
+      {% if hitman.id != 1 %}
+      <tr>
+        <td><b>Is active: </b></td>
+        <form method="post" action="" id="inactive-form">
+          <input type="hidden" name="inactive-hitman" value="true" />
+          <td>
+            {{hitman.active}} {% if hitman.active %}<button
+              onclick="inactiveHitman()"
+            >
+              Inactive hitman</button
+            >{% endif %}
+          </td>
+        </form>
+      </tr>
+      {% endif %}
+    </table>
+  </div>
+  {% if current_user.id==1 and hitman.id!=1 %}
+  <form method="post" action="" id="lackeys-form">
+    <div>
+      <h3>Lackeys</h3>
+      <div id="lackeysDropdown">
+        {% for lackey in hitman.lackeys %}
+        <div>
+          <input
+            name="lackeys"
+            value="{{lackey.id}}"
+            type="checkbox"
+            checked
+          />
+          <label>{{lackey.name}}</label>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <button type="submit" name="save-lackeys" value="true">Save</button>
+  </form>
+  <div>
+    {% if posible_lackeys %}
+    <h3>Possible lackeys</h3>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Manager</th>
+        <th></th>
+      </tr>
+      {% for pl in posible_lackeys %}
+      <tr>
+        <td>{{pl.name}}</td>
+        <td>{{pl.email}}</td>
+        <td>{{pl.manager.name}}</td>
+        <td>
+          <a
+            href="#"
+            onclick="myFunction(event, this,{{ pl.id }}, '{{pl.name}}')"
+            >Make lackey</a
+          >
+        </td>
+      </tr>
+      {% endfor %} {% endif %}
+    </table>
+  </div>
+  {% endif %}
+</center>
+<script>
+  const lackeysDropdown = document.getElementById("lackeysDropdown");
+  function inactiveHitman() {
+    let response = confirm("Are you sure?");
+    if (response) {
+      let inactiveForm = document.getElementById("inactive-form");
+      inactiveForm.submit();
+    }
+  }
+  function myFunction(event, el, id, name) {
+      {% if hitman.active %}
+    event.preventDefault();
+    let alackey = document.createElement("input");
+    let adiv = document.createElement("div");
+    let lackeysForm = document.getElementById("lackeys-form");
+    alackey.type = "checkbox";
+    alackey.name = "lackeys";
+    alackey.value = id;
+    alackey.checked = true;
+    let alabel = document.createElement("label");
+    alabel.innerText = name;
+    adiv.appendChild(alackey);
+    adiv.appendChild(alabel);
+    lackeysDropdown.appendChild(adiv);
+    el.parentElement.parentElement.remove();
+    let submitButton = document.getElementById("submit");
+      {% else %}
+      alert("This hitman is inactive")
+      {% endif %}
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,57 @@
+version: "3.9"
+   
+services:
+  db:
+    image: postgres
+    container_name: spyx_db
+    # volumes:
+      # - postgresDataVolume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=spyxdb
+      - POSTGRES_USER=spyx
+      - POSTGRES_PASSWORD=spyxPass
+    networks:
+      spyxnet:
+        ipv4_address: 172.11.0.4
+  pgadmin:
+    container_name: spyx_pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: suchilin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: supersecret
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      spyxnet:
+        ipv4_address: 172.11.0.5
+  web:
+    build: .
+    container_name: spyx_web
+    volumes:
+      - .:/code
+    environment:
+      - DATABASE_URI=postgresql://spyx:spyxPass@db:5432/spyxdb
+      - SECRET_KEY=7110c8ae51a4b5af97be6534caef90e4bb9bdcb3380af008f90b23a5d1616bf319bc298105da20fe
+      - FLASK_ENV=development
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    networks:
+      spyxnet:
+        ipv4_address: 172.11.0.3
+
+volumes:
+  pgadmin:
+#   postgresDataVolume:
+networks:
+  spyxnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.11.0.0/16

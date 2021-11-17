@@ -1,0 +1,33 @@
+{% extends "base_template.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<center>
+  <h1>Hits</h1>
+  {% if current_user.id==1 or current_user.lackeys %}
+  <a href="{{ url_for('hits.create') }}">Create Hit</a>
+  {% endif %}
+	<div>
+		<table>
+			<tr>
+				<th>Id</th>
+				<th>Target</th>
+				<th>Hitman</th>
+				<th>Created by</th>
+				<th>Status</th>
+			</tr>
+			{% for hit in hits %}
+			<tr>
+				<td>{{hit.id}}</td>
+				<td>{{hit.target}}</td>
+        <td><a href="{{ url_for('hitmen.detail', hitman_id=hit.hitman.id) }}">{{hit.hitman.name}}</a></td>
+				<td>{{hit.creator.name}}</td>
+				<td>{{hit.status}}</td>
+        <td><a href="{{ url_for('hits.detail', hit_id=hit.id) }}">Detail</a></td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</center>
+{% endblock %}

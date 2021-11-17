@@ -1,0 +1,59 @@
+{% extends "base_template.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<center>
+  <h1>Hit detail</h1>
+  {% if message %}
+  <h3>{{message}}</h3>
+  {% endif %}
+	<div>
+		<table>
+			<tr>
+        <td><b>Id:</b></td>
+				<td>{{hit.id}}</td>
+			</tr>
+			<tr>
+        <td><b>Target:</b></td>
+				<td>{{hit.target}}</td>
+			</tr>
+			<tr>
+        <td><b>Description:</b></td>
+				<td>{{hit.description}}</td>
+			</tr>
+			<tr>
+        <td><b>Created by:</b></td>
+				<td>{{hit.creator.name}}</td>
+			</tr>
+      {% if hit.status!='asigned' %}
+			<tr>
+        <td><b>Status:</b></td>
+				<td>{{hit.status}}</td>
+			</tr>
+			<tr>
+        <td><b>Assignee:</b></td>
+				<td>{{hit.hitman.name}}</td>
+			</tr>
+      {% endif%}
+		</table>
+	</div>
+  <form action="" method="POST">
+    {% if not current_user.lackeys and current_user.id!=1 and hit.status=='asigned' %}
+    <button type="submit" value="success" name="status">Set success</button>
+    <button type="submit" value="failed" name="status">Set failed</button>
+    {% endif %}
+    {% if current_user.lackeys or current_user.id==1 %}
+      {% if hit.status=='asigned' %}
+      <label>Asignee: 
+      <select name="assignee">
+        {% for hitman in hitmen %}
+        <option value="{{hitman.id}}" {% if hitman.id==hit.hitman.id %} selected="selected" {% endif%} >{{hitman.name}}</option>
+        {% endfor %}
+      </select></label>
+      <input type="submit" value="Save"/>
+      {% endif %}
+    {% endif %}
+  </form>
+</center>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base_template.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<center>
+  <h1>Bulk assignements</h1>
+  {% if message %}
+  <h3>{{message}}</h3>
+  {% endif %}
+	<div>
+    <form action="" method="POST">
+		<table>
+			<tr>
+				<th>Id</th>
+				<th>Target</th>
+				<th>Hitman</th>
+				<th>Created by</th>
+				<th>Status</th>
+			</tr>
+			{% for hit in hits %}
+			<tr>
+				<td>{{hit.id}}</td>
+				<td>{{hit.target}}</td>
+        <td><select name="assignements">
+            {% for hitman in hitmen %}
+              {% if hitman.active ==False %}
+                {% if hit.hitman.id==hitman.id %}
+                <option value="{{hit.id}},{{hitman.id}}" {% if hitman.id==hit.hitman.id %} selected="selected" {% endif%}>{{hitman.name}}</option>
+                {% endif %}
+               {% else %}
+                   <option value="{{hit.id}},{{hitman.id}}" {% if hitman.id==hit.hitman.id %} selected="selected" {% endif%}>{{hitman.name}}</option>
+               {% endif %}
+             {% endfor %}
+          </select></td>
+				<td>{{hit.creator.name}}</td>
+				<td>{{hit.status}}</td>
+        <td><a href="{{ url_for('hits.detail', hit_id=hit.id) }}">Detail</a></td>
+			</tr>
+			{% endfor %}
+		</table>
+    <input type="submit" value="Save" />
+</form>
+	</div>
+</center>
+{% endblock %}
