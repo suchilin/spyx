@@ -12,10 +12,11 @@ cd spyx
 docker-compose up -d
 ```
 ## Usage
-Se crearan 3 contenedores:
+Se crearan 3 contenedores:  
 postgres  
 pgadmin4  
 spyx web  
+  
 y una red docker  
 spyxnet
   
@@ -24,13 +25,13 @@ tambien se expone el puerto 80, por lo que si este puerto esta en uso el desplie
 ## Users
 user: giusepi@spyx.com  
 password: SuperBoss_2021@  
-
+  
 user: manager1@spyx.com  
 password: Manager1_2021@  
-
+  
 user: manager2@spyx.com  
 password: Manager2_2021@  
-
+  
 user: manager3@spyx.com  
 password: Manager3_2021@  
   
